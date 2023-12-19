@@ -20,7 +20,6 @@ client = discord.Client(
 # Initialise bot
 bot = commands.Bot(command_prefix='!', intents=intents.all())
 
-
 # -- DEFINED EVENTS --
 @bot.event
 async def on_ready():
@@ -30,6 +29,19 @@ async def on_ready():
         print(f"Synced: {len(synced)} command(s)")
     except Exception as e:
         print(f"Could not sync commands: {e}")
+
+@bot.event
+async def on_slash_command_error(ctx, error):
+    print(error)
+    await ctx.send("Bror du använder commandsen fel")
+
+@bot.event
+async def on_member_join(member):
+    await member.send(f"Välkommen till servern {member.name}!")
+
+@bot.event
+async def on_member_remove(member):
+    await member.send(f"Vi ses {member.name}!")
 
 
 # -- DEFINED COMMANDS --
@@ -47,8 +59,8 @@ async def say(interraction: discord.Interaction, thing_to_say: str):
 
 
 @bot.tree.command(name="8ball")
-@app_commands.describe(question="Your question")
-async def eight_ball(interraction: discord.Interaction, question: str):
+@app_commands.describe(fråga="Din fråga")
+async def eight_ball(interraction: discord.Interaction, fråga: str):
     """Ask the magic 8ball a question"""
     eight_ball_responses = [
         "Det är säkert",
@@ -82,7 +94,7 @@ async def eight_ball(interraction: discord.Interaction, question: str):
         "Fråga mig senare, jag är upptagen",
         "Det är bättre du inte vet det nu"
     ]
-    await interraction.response.send_message(f":crystal_ball: {question}\n:8ball: {random.choice(eight_ball_responses)}")
+    await interraction.response.send_message(f":crystal_ball: {fråga}\n:8ball: {random.choice(eight_ball_responses)}")
 
 
 @bot.tree.command(name="russian_roulette")
@@ -96,7 +108,23 @@ async def russian_roulette(interraction: discord.Interaction):
         await interraction.user.timeout(duration, reason="Du är död i 5 minuter")
     else:
         # User survives
-        await interraction.response.send_message(f"{interraction.user.mention} :man: Click! :gun:\n")
+        await interraction.response.send_message(f"{interraction.user.mention} :man: Klick! :gun:\n")
+
+
+@bot.tree.command(name="balle")
+async def balle(interraction: discord.Interaction):
+    """Hur stor balle har du?"""
+    length = random.randint(6, 25)
+    if 6 <= length <= 11:
+        emoji = ":worm:"
+    elif 12 <= length <= 16:
+        emoji = ":test_tube:"
+    elif 17 <= length <= 21:
+        emoji = ":snake:"
+    else:
+        emoji = ":eggplant:"
+
+    await interraction.response.send_message(f"{interraction.user.mention} har {length} cm balle {emoji}")
 
 # Launch the client
 bot.run(TOKEN)
