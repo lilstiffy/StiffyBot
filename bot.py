@@ -89,8 +89,13 @@ async def eight_ball(interraction: discord.Interaction, question: str):
 async def russian_roulette(interraction: discord.Interaction):
     """Play russian roulette"""
     if random.randint(1, 6) == 1:
+        # Timeout user for 5 minutes
         await interraction.response.send_message(f"{interraction.user.mention} :skull_crossbones: :boom: :gun:")
+        import datetime
+        duration = datetime.timedelta(minutes=5)
+        await interraction.user.timeout(duration, reason="Du är död i 5 minuter")
     else:
+        # User survives
         await interraction.response.send_message(f"{interraction.user.mention} :man: Click! :gun:\n")
 
 # Launch the client
