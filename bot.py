@@ -126,5 +126,23 @@ async def balle(interraction: discord.Interaction):
 
     await interraction.response.send_message(f"{interraction.user.mention} har {length} cm balle {emoji}")
 
+@bot.tree.command(name="roll")
+async def roll(interaction: discord.Interaction, dice: str):
+    """Rulla en tärning: d4, d6, d8, d10, d12, d20"""
+
+    # Define the supported dice
+    valid_dice = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20']
+
+    # Check if the specified dice is valid
+    if dice not in valid_dice:
+        await interaction.response.send_message("Ogiltig tärning :game_die:. Typer som stöds: d4, d6, d8, d10, d12, d20")
+        return
+
+    # Roll the specified dice
+    result = random.randint(1, int(dice[1:]))
+
+    # Send the result to the channel
+    await interaction.response.send_message(f"{interaction.user.mention} Rullade en {dice} :game_die:: {result}")
+
 # Launch the client
 bot.run(TOKEN)
