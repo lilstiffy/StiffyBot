@@ -1,6 +1,9 @@
 import os
 import discord
 import random
+
+from openai import AsyncOpenAI
+
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -20,6 +23,25 @@ client = discord.Client(
 # Initialise bot
 bot = commands.Bot(command_prefix='!', intents=intents.all())
 
+# Initialise OpenAI
+openAiClient = AsyncOpenAI(api_key=os.getenv('OPEN_AI_TOKEN'))
+
+
+# -- ChatGPT functions --
+async def chat_with_gpt(input_text):
+    try:
+        response = await openAiClient.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": input_text}
+            ]
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        return f"Ett fel inträffade: {str(e)}"
+
 
 # -- DEFINED EVENTS --
 @bot.event
@@ -35,7 +57,7 @@ async def on_ready():
 @bot.event
 async def on_slash_command_error(ctx, error):
     print(error)
-    await ctx.send("Bror du använder commandsen fel")
+    await ctx.send("Felaktig användning av kommando")
 
 
 @bot.event
@@ -51,14 +73,14 @@ async def on_member_remove(member):
 # -- DEFINED COMMANDS --
 @bot.tree.command(name="ping")
 async def ping(interraction: discord.Interaction):
-    """Ping the bot"""
+    """Pinga boten"""
     await interraction.response.send_message(f"{interraction.user.mention} :white_check_mark:", ephemeral=True)
 
 
 @bot.tree.command(name="say")
 @app_commands.describe(thing_to_say="What to say")
 async def say(interraction: discord.Interaction, thing_to_say: str):
-    """Make the bot say something"""
+    """Få boten att säga något"""
     await interraction.response.send_message(f"{interraction.user.mention} {thing_to_say}")
 
 
@@ -111,6 +133,24 @@ async def balle(interraction: discord.Interaction):
         emoji = ":eggplant:"
 
     await interraction.response.send_message(f"{interraction.user.mention} har {length} cm balle {emoji}")
+
+
+@bot.tree.command(name="chatgpt")
+async def gpt(interraction: discord.Interaction, *, gpt_input: str):
+    """Ställ GPT-3.5 en fråga"""
+    await interraction.response.defer()
+    gpt_response = await chat_with_gpt(gpt_input)
+
+    embed = discord.Embed(
+        title="ChatGPT",
+        description=f"{interraction.user.mention} frågade GPT-3.5:",
+        color=discord.Color.blue()
+    )
+
+    embed.add_field(name="Input", value=gpt_input, inline=False)
+    embed.add_field(name="Output", value=gpt_response, inline=False)
+
+    await interraction.followup.send(embed=embed)
 
 # Launch the client
 bot.run(TOKEN)
