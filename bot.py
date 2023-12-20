@@ -139,10 +139,10 @@ async def balle(interraction: discord.Interaction):
 
 
 @bot.tree.command(name="chatgpt")
-async def gpt(interraction: discord.Interaction, *, gpt_input: str):
+async def gpt(interraction: discord.Interaction, *, fråga: str):
     """Ställ GPT-3.5 en fråga"""
     await interraction.response.defer()
-    gpt_response = await chat_with_gpt(gpt_input)
+    gpt_response = await chat_with_gpt(fråga)
 
     embed = discord.Embed(
         description=f"{interraction.user.mention} frågade GPT-3.5:",
@@ -154,8 +154,10 @@ async def gpt(interraction: discord.Interaction, *, gpt_input: str):
         icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/chatgpt.png?raw=true"
     )
 
-    embed.add_field(name="", value=gpt_input, inline=False)
-    embed.add_field(name="Svar", value=gpt_response, inline=False)
+    trimmed_response = gpt_response[:1020] + "..." if len(gpt_response) > 1020 else gpt_response
+
+    embed.add_field(name="", value=fråga, inline=False)
+    embed.add_field(name="Svar", value=trimmed_response, inline=False)
 
     await interraction.followup.send(embed=embed)
 
