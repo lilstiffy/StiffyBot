@@ -61,54 +61,36 @@ async def say(interraction: discord.Interaction, thing_to_say: str):
 @bot.tree.command(name="8ball")
 @app_commands.describe(fråga="Din fråga")
 async def eight_ball(interraction: discord.Interaction, fråga: str):
-    """Ask the magic 8ball a question"""
-    eight_ball_responses = [
-        "Det är säkert",
-        "Det är absolut så",
-        "Utan tvekan",
-        "Ja, definitivt",
-        "Du kan lita på det",
-        "Som jag ser det, ja",
-        "Mycket troligt",
-        "Ja, absolut",
-        "Svarar inte nu, försök igen senare",
-        "Fråga mig senare",
-        "Kan inte förutsäga nu",
-        "Koncentrera dig och fråga igen",
-        "Svarar inte",
-        "Det ser inte så jätteljust ut",
-        "Mycket tvivelaktigt",
-        "Nej",
-        "Mitt svar är nej",
-        "Mycket osannolikt",
-        "Definitivt inte",
-        "Svaret är tveksamt",
-        "Spåren pekar inte på det",
-        "Tvivlar starkt",
-        "Nej, det kommer inte att hända",
-        "Inte en chans",
-        "Glöm det",
-        "Bra fråga, svårt att säga",
-        "Jag vet inte, försök igen",
-        "Kan inte svara nu",
-        "Fråga mig senare, jag är upptagen",
-        "Det är bättre du inte vet det nu"
-    ]
-    await interraction.response.send_message(f":crystal_ball: {fråga}\n:8ball: {random.choice(eight_ball_responses)}")
+    """Fråga magiska 8ball en fråga"""
+    with open("8ball_responses.txt", "r") as f:
+        eight_ball_responses = f.read().splitlines()
+
+    embed = discord.Embed(
+        description=f"{interraction.user.mention} frågade 8ball:",
+        color=discord.Color.purple()
+    )
+    embed.set_author(name="8ball", icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/8ball.png?raw=true")
+
+    embed.add_field(name="", value=fråga, inline=False)
+    embed.add_field(name="Svaret är", value=random.choice(eight_ball_responses), inline=False)
+
+    await interraction.response.send_message(embed=embed)
 
 
 @bot.tree.command(name="russian_roulette")
 async def russian_roulette(interraction: discord.Interaction):
-    """Play russian roulette"""
-    if random.randint(1, 6) == 1:
-        # Timeout user for 5 minutes
-        await interraction.response.send_message(f"{interraction.user.mention} :skull_crossbones: :boom: :gun:")
-        import datetime
-        duration = datetime.timedelta(minutes=5)
-        await interraction.user.timeout(duration, reason="Du är död i 5 minuter")
-    else:
-        # User survives
-        await interraction.response.send_message(f"{interraction.user.mention} :man: Klick! :gun:\n")
+    """Spela en runda rysk roulette"""
+    did_shoot = random.randint(1, 6) == 1
+
+    embed = discord.Embed(
+        title="Rysk roulette",
+        description=f"{interraction.user.mention} spelade en runda rysk roulette",
+        color=discord.Color.red() if did_shoot else discord.Color.green()
+    )
+
+    embed.add_field(name="Resultat", value="Sköt sig själv ☠️" if did_shoot else "Överlevde rundan 🎉")
+
+    await interraction.response.send_message(embed=embed)
 
 
 @bot.tree.command(name="balle")
