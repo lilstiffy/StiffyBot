@@ -147,8 +147,8 @@ async def gpt(interraction: discord.Interaction, *, gpt_input: str):
         color=discord.Color.blue()
     )
 
-    embed.add_field(name="Input", value=gpt_input, inline=False)
-    embed.add_field(name="Output", value=gpt_response, inline=False)
+    embed.add_field(name="", value=gpt_input, inline=False)
+    embed.add_field(name="Svar", value=gpt_response, inline=False)
 
     await interraction.followup.send(embed=embed)
 
