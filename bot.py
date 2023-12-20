@@ -20,6 +20,7 @@ client = discord.Client(
 # Initialise bot
 bot = commands.Bot(command_prefix='!', intents=intents.all())
 
+
 # -- DEFINED EVENTS --
 @bot.event
 async def on_ready():
@@ -30,14 +31,17 @@ async def on_ready():
     except Exception as e:
         print(f"Could not sync commands: {e}")
 
+
 @bot.event
 async def on_slash_command_error(ctx, error):
     print(error)
     await ctx.send("Bror du använder commandsen fel")
 
+
 @bot.event
 async def on_member_join(member):
     await member.send(f"Välkommen till servern {member.name}!")
+
 
 @bot.event
 async def on_member_remove(member):
