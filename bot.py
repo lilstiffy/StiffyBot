@@ -56,17 +56,10 @@ async def ping(interraction: discord.Interaction):
     await interraction.response.send_message(f"{interraction.user.mention} :white_check_mark:", ephemeral=True)
 
 
-@bot.tree.command(name="say")
-@app_commands.describe(thing_to_say="What to say")
-async def say(interraction: discord.Interaction, thing_to_say: str):
-    """Få boten att säga något"""
-    await interraction.response.send_message(f"{interraction.user.mention} {thing_to_say}")
-
-
 @bot.tree.command(name="8ball")
 @app_commands.describe(fråga="Din fråga")
 async def eight_ball(interraction: discord.Interaction, fråga: str):
-    """Fråga magiska 8ball en fråga"""
+    """Ställ magiska 8ball en fråga"""
     with open("assets/8ball_responses.txt", "r") as f:
         eight_ball_responses = f.read().splitlines()
 
