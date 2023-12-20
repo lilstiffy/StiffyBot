@@ -122,22 +122,6 @@ async def russian_roulette(interraction: discord.Interaction):
     await interraction.response.send_message(embed=embed)
 
 
-@bot.tree.command(name="balle")
-async def balle(interraction: discord.Interaction):
-    """Hur stor balle har du?"""
-    length = random.randint(6, 25)
-    if 6 <= length <= 11:
-        emoji = ":worm:"
-    elif 12 <= length <= 16:
-        emoji = ":test_tube:"
-    elif 17 <= length <= 21:
-        emoji = ":snake:"
-    else:
-        emoji = ":eggplant:"
-
-    await interraction.response.send_message(f"{interraction.user.mention} har {length} cm balle {emoji}")
-
-
 @bot.tree.command(name="chatgpt")
 async def gpt(interraction: discord.Interaction, *, fråga: str):
     """Ställ GPT-3.5 en fråga"""
