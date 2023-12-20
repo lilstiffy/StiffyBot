@@ -95,7 +95,10 @@ async def eight_ball(interraction: discord.Interaction, fråga: str):
         description=f"{interraction.user.mention} frågade 8ball:",
         color=discord.Color.purple()
     )
-    embed.set_author(name="8ball", icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/8ball.png?raw=true")
+    embed.set_author(
+        name="8ball",
+        icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/8ball.png?raw=true"
+    )
 
     embed.add_field(name="", value=fråga, inline=False)
     embed.add_field(name="Svaret är", value=random.choice(eight_ball_responses), inline=False)
@@ -142,9 +145,13 @@ async def gpt(interraction: discord.Interaction, *, gpt_input: str):
     gpt_response = await chat_with_gpt(gpt_input)
 
     embed = discord.Embed(
-        title="ChatGPT",
         description=f"{interraction.user.mention} frågade GPT-3.5:",
-        color=discord.Color.blue()
+        color=discord.Color.from_rgb(128, 170, 158)
+    )
+
+    embed.set_author(
+        name="GPT-3.5",
+        icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/chatgpt.png?raw=true"
     )
 
     embed.add_field(name="", value=gpt_input, inline=False)
