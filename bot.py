@@ -2,11 +2,12 @@ import os
 import discord
 import random
 
-from openai import AsyncOpenAI
 
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
+
+import chatgpt.discord_gpt as chatgpt
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,25 +23,6 @@ client = discord.Client(
 
 # Initialise bot
 bot = commands.Bot(command_prefix='!', intents=intents.all())
-
-# Initialise OpenAI
-openAiClient = AsyncOpenAI(api_key=os.getenv('OPEN_AI_TOKEN'))
-
-
-# -- ChatGPT functions --
-async def chat_with_gpt(input_text):
-    try:
-        response = await openAiClient.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "user", "content": input_text}
-            ]
-        )
-
-        return response.choices[0].message.content
-
-    except Exception as e:
-        return f"Ett fel inträffade: {str(e)}"
 
 
 # -- DEFINED EVENTS --
@@ -88,7 +70,7 @@ async def say(interraction: discord.Interaction, thing_to_say: str):
 @app_commands.describe(fråga="Din fråga")
 async def eight_ball(interraction: discord.Interaction, fråga: str):
     """Fråga magiska 8ball en fråga"""
-    with open("8ball_responses.txt", "r") as f:
+    with open("assets/8ball_responses.txt", "r") as f:
         eight_ball_responses = f.read().splitlines()
 
     embed = discord.Embed(
@@ -126,15 +108,15 @@ async def russian_roulette(interraction: discord.Interaction):
 async def gpt(interraction: discord.Interaction, *, fråga: str):
     """Ställ GPT-3.5 en fråga"""
     await interraction.response.defer()
-    gpt_response = await chat_with_gpt(fråga)
+    gpt_response = await chatgpt.chat_with_gpt(fråga)
 
     embed = discord.Embed(
-        description=f"{interraction.user.mention} frågade GPT-3.5:",
+        description=f"{interraction.user.mention}",
         color=discord.Color.from_rgb(128, 170, 158)
     )
 
     embed.set_author(
-        name="GPT-3.5",
+        name="ChatGPT",
         icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/chatgpt.png?raw=true"
     )
 
