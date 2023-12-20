@@ -91,7 +91,7 @@ async def russian_roulette(interraction: discord.Interaction):
 
     if did_shoot:
         import datetime
-        await interraction.user.timeout(datetime.timedelta(minutes=5), "Du sköt dig själv i huvudet ☠️")
+        await interraction.user.timeout(datetime.timedelta(minutes=5), reason="Du sköt dig själv i huvudet ☠️")
 
     embed.add_field(name="Resultat", value="Sköt sig själv ☠️" if did_shoot else "Överlevde rundan 🎉")
 
