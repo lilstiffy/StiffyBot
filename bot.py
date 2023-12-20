@@ -1,12 +1,9 @@
 import os
-import discord
 import random
-
-
+from dotenv import load_dotenv
+import discord
 from discord import app_commands
 from discord.ext import commands
-from dotenv import load_dotenv
-
 import chatgpt.discord_gpt as chatgpt
 
 # Load environment variables from .env file
