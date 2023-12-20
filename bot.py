@@ -89,6 +89,10 @@ async def russian_roulette(interraction: discord.Interaction):
         color=discord.Color.red() if did_shoot else discord.Color.green()
     )
 
+    if did_shoot:
+        import datetime
+        await interraction.user.timeout(datetime.timedelta(minutes=5), "Du sköt dig själv i huvudet ☠️")
+
     embed.add_field(name="Resultat", value="Sköt sig själv ☠️" if did_shoot else "Överlevde rundan 🎉")
 
     await interraction.response.send_message(embed=embed)
