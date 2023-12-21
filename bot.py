@@ -29,7 +29,9 @@ async def on_ready():
     print("Bot up and running!")
     try:
         synced = await bot.tree.sync()
-        print(f"Synced: {len(synced)} command(s)")
+        for command in synced:
+            print(f"Synced command: {command}")
+        print(f"Synced: {len(synced)} command(s)\n______________________")
     except Exception as e:
         print(f"Could not sync commands: {e}")
 
@@ -54,6 +56,7 @@ async def on_member_remove(member):
 @bot.tree.command(name="ping")
 async def ping(interraction: discord.Interaction):
     """Ping the bot"""
+    print(f"Pinged by {interraction.user.name} ({interraction.user.id})")
     await interraction.response.send_message(f"{interraction.user.mention} :white_check_mark:", ephemeral=True)
 
 
@@ -61,6 +64,8 @@ async def ping(interraction: discord.Interaction):
 @app_commands.describe(question="Din fråga")
 async def eight_ball(interraction: discord.Interaction, question: str):
     """Ask the magic 8ball a question"""
+    print(f"8ball command called by {interraction.user.name} ({interraction.user.id})")
+
     with open("assets/8ball_responses.txt", "r") as f:
         eight_ball_responses = f.read().splitlines()
 
@@ -82,6 +87,8 @@ async def eight_ball(interraction: discord.Interaction, question: str):
 @bot.tree.command(name="russian_roulette")
 async def russian_roulette(interraction: discord.Interaction):
     """Play a round of russian roulette"""
+    print(f"Russian roulette command called by {interraction.user.name} ({interraction.user.id})")
+
     did_shoot = random.randint(1, 6) == 1
 
     embed = discord.Embed(
@@ -102,6 +109,8 @@ async def russian_roulette(interraction: discord.Interaction):
 @bot.tree.command(name="chatgpt")
 async def gpt(interraction: discord.Interaction, *, query: str):
     """Ask ChatGPT a question"""
+    print(f"ChatGPT command called by {interraction.user.name} ({interraction.user.id})")
+
     await interraction.response.defer()
     gpt_response = await chatgpt.chat_with_gpt(query)
 
@@ -124,16 +133,17 @@ async def gpt(interraction: discord.Interaction, *, query: str):
 
 
 @bot.tree.command(name="urban")
-async def urban(interraction: discord.Interaction, *, query: str):
+async def urban(interraction: discord.Interaction, *, term: str):
     """Search for a term on Urban Dictionary"""
+    print(f"Urban Dictionary command called by {interraction.user.name} ({interraction.user.id})")
+
     await interraction.response.defer()
-    ud_response = await ud.request_term(query)
+    ud_response = await ud.request_term(term)
 
     try:
         entry = ud_response['list'][0]
 
         embed = discord.Embed(
-            description=f"{interraction.user.mention}",
             color=discord.Color.from_rgb(86, 170, 232)
         )
 
@@ -142,16 +152,15 @@ async def urban(interraction: discord.Interaction, *, query: str):
             icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/urban_dictionary.png?raw=true"
         )
 
-        embed.add_field(name="Word", value=entry['word'], inline=False)
+        embed.add_field(name="Term", value=entry['word'], inline=False)
         embed.add_field(name="Definition", value=entry['definition'], inline=False)
         embed.add_field(name="Example", value=entry['example'], inline=False)
 
         await interraction.followup.send(embed=embed)
-    except IndexError as e:
+    except Exception as e:
         print(e)
 
         embed = discord.Embed(
-            description=f"{interraction.user.mention}",
             color=discord.Color.from_rgb(86, 170, 232)
         )
 
@@ -160,8 +169,11 @@ async def urban(interraction: discord.Interaction, *, query: str):
             icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/urban_dictionary.png?raw=true"
         )
 
-        embed.add_field(name="Word", value=query, inline=False)
-        embed.add_field(name="Error", value="No definition found", inline=False)
+        embed.add_field(name="Term", value=term, inline=False)
+        if ud.API_KEY is None:
+            embed.add_field(name="Error", value="Missing API key", inline=False)
+        else:
+            embed.add_field(name="Error", value="No definition found", inline=False)
 
         await interraction.followup.send(embed=embed)
 
@@ -169,6 +181,7 @@ async def urban(interraction: discord.Interaction, *, query: str):
 @bot.tree.command(name="roll")
 async def roll(interaction: discord.Interaction, dice: str, count: int = 1):
     """Roll dices: d4, d6, d8, d10, d12, d20"""
+    print(f"Roll command called by {interaction.user.name} ({interaction.user.id})")
 
     # Define the supported dice
     valid_dice = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20']
