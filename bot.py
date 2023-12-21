@@ -57,8 +57,8 @@ async def ping(interraction: discord.Interaction):
 
 
 @bot.tree.command(name="8ball")
-@app_commands.describe(fråga="Din fråga")
-async def eight_ball(interraction: discord.Interaction, fråga: str):
+@app_commands.describe(question="Din fråga")
+async def eight_ball(interraction: discord.Interaction, question: str):
     """Ask the magic 8ball a question"""
     with open("assets/8ball_responses.txt", "r") as f:
         eight_ball_responses = f.read().splitlines()
@@ -72,7 +72,7 @@ async def eight_ball(interraction: discord.Interaction, fråga: str):
         icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/8ball.png?raw=true"
     )
 
-    embed.add_field(name="", value=fråga, inline=False)
+    embed.add_field(name="", value=question, inline=False)
     embed.add_field(name="The answer is", value=random.choice(eight_ball_responses), inline=False)
 
     await interraction.response.send_message(embed=embed)
@@ -138,18 +138,20 @@ async def roll(interaction: discord.Interaction, dice: str, count: int = 1):
     result = random.randint(1, int(dice[1:])) * count
 
     embed = discord.Embed(
-        description=f"{interaction.user.mention} rolled a {dice} :game_die:",
-        color=discord.Color.from_rgb(128, 170, 158)
+        description=f"{interaction.user.mention} rolled {dice} :game_die:",
+        color=discord.Color.purple()
     )
 
     embed.set_author(
         name="Dice roll",
         icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/purple_d20.png?raw=true"
     )
-    embed.add_field(name="Roll", value=result, inline=False)
+
+    embed.add_field(name="Count", value=count)
+    embed.add_field(name="Roll", value=result)
 
     # Send the result to the channel
-    await interaction.response.send_message(f"{interaction.user.mention} rolled a {dice} :game_die:: {result}")
+    await interaction.response.send_message(embed=embed)
 
 # Launch the client
 bot.run(TOKEN)
