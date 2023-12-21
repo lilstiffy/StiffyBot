@@ -5,6 +5,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import chatgpt.discord_gpt as chatgpt
+import urbandictionary.urban_dictionary as ud
 
 # Load environment variables from .env file
 load_dotenv()
@@ -120,6 +121,49 @@ async def gpt(interraction: discord.Interaction, *, query: str):
     embed.add_field(name="Response", value=trimmed_response, inline=False)
 
     await interraction.followup.send(embed=embed)
+
+
+@bot.tree.command(name="urban")
+async def urban(interraction: discord.Interaction, *, query: str):
+    """Search for a term on Urban Dictionary"""
+    await interraction.response.defer()
+    ud_response = await ud.request_term(query)
+
+    try:
+        entry = ud_response['list'][0]
+
+        embed = discord.Embed(
+            description=f"{interraction.user.mention}",
+            color=discord.Color.from_rgb(86, 170, 232)
+        )
+
+        embed.set_author(
+            name="Urban Dictionary",
+            icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/urban_dictionary.png?raw=true"
+        )
+
+        embed.add_field(name="Word", value=entry['word'], inline=False)
+        embed.add_field(name="Definition", value=entry['definition'], inline=False)
+        embed.add_field(name="Example", value=entry['example'], inline=False)
+
+        await interraction.followup.send(embed=embed)
+    except IndexError as e:
+        print(e)
+
+        embed = discord.Embed(
+            description=f"{interraction.user.mention}",
+            color=discord.Color.from_rgb(86, 170, 232)
+        )
+
+        embed.set_author(
+            name="Urban Dictionary",
+            icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/urban_dictionary.png?raw=true"
+        )
+
+        embed.add_field(name="Word", value=query, inline=False)
+        embed.add_field(name="Error", value="No definition found", inline=False)
+
+        await interraction.followup.send(embed=embed)
 
 
 @bot.tree.command(name="roll")
