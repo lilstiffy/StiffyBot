@@ -26,14 +26,14 @@ bot = commands.Bot(command_prefix='!', intents=intents.all())
 # -- DEFINED EVENTS --
 @bot.event
 async def on_ready():
-    print("Bot up and running!")
+    print("--- 🤖StiffyBot is up and running 🤖---")
     try:
         synced = await bot.tree.sync()
         for command in synced:
-            print(f"Synced command: {command}")
-        print(f"Synced: {len(synced)} command(s)\n______________________")
+            print(f"--- Synced command: {command} ✅")
+        print(f"--- Synced: {len(synced)} command(s)\n____________________________________________")
     except Exception as e:
-        print(f"Could not sync commands: {e}")
+        print(f"⚠️Could not sync commands: {e}")
 
 
 @bot.event
@@ -61,7 +61,6 @@ async def ping(interraction: discord.Interaction):
 
 
 @bot.tree.command(name="8ball")
-@app_commands.describe(question="Din fråga")
 async def eight_ball(interraction: discord.Interaction, question: str):
     """Ask the magic 8ball a question"""
     print(f"8ball command called by {interraction.user.name} ({interraction.user.id})")
@@ -79,7 +78,7 @@ async def eight_ball(interraction: discord.Interaction, question: str):
     )
 
     embed.add_field(name="", value=question, inline=False)
-    embed.add_field(name="The answer is", value=random.choice(eight_ball_responses), inline=False)
+    embed.add_field(name="8ball says", value=random.choice(eight_ball_responses), inline=False)
 
     await interraction.response.send_message(embed=embed)
 
@@ -132,7 +131,7 @@ async def gpt(interraction: discord.Interaction, *, query: str):
     await interraction.followup.send(embed=embed)
 
 
-@bot.tree.command(name="urban")
+@bot.tree.command(name="urban_dictionary")
 async def urban(interraction: discord.Interaction, *, term: str):
     """Search for a term on Urban Dictionary"""
     print(f"Urban Dictionary command called by {interraction.user.name} ({interraction.user.id})")
@@ -153,8 +152,8 @@ async def urban(interraction: discord.Interaction, *, term: str):
         )
 
         embed.add_field(name="Term", value=entry['word'], inline=False)
-        embed.add_field(name="Definition", value=entry['definition'], inline=False)
-        embed.add_field(name="Example", value=entry['example'], inline=False)
+        embed.add_field(name="Definition", value=entry['definition'].replace("[", "").replace("]", ""), inline=False)
+        embed.add_field(name="Example", value=entry['example'].replace("[", "").replace("]", ""), inline=False)
 
         await interraction.followup.send(embed=embed)
     except Exception as e:
