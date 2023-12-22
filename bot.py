@@ -191,10 +191,14 @@ async def roll(interaction: discord.Interaction, dice: str, count: int = 1):
         return
 
     # Roll the specified dice n times
-    result = random.randint(1, int(dice[1:])) * count
+    dice_sum = 0
+    for i in range(count):
+        dice_sum += random.randint(1, int(dice[1:]))
+
+    result = str(dice_sum)
 
     embed = discord.Embed(
-        description=f"{interaction.user.mention} rolled {dice} :game_die:",
+        description=f"{interaction.user.mention}",
         color=discord.Color.purple()
     )
 
@@ -203,8 +207,9 @@ async def roll(interaction: discord.Interaction, dice: str, count: int = 1):
         icon_url="https://github.com/lilstiffy/StiffyBot/blob/master/assets/purple_d20.png?raw=true"
     )
 
+    embed.add_field(name="Dice", value=dice)
     embed.add_field(name="Count", value=count)
-    embed.add_field(name="Roll", value=result)
+    embed.add_field(name="Roll", value=result, inline=False)
 
     # Send the result to the channel
     await interaction.response.send_message(embed=embed)
