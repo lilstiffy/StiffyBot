@@ -32,4 +32,4 @@ jobs:
         
     - name: Analysing the code with pylint
       run: |
-        find . -name '*.py' -exec pylint {} \;
+        find . -name '*.py' -exec pylint --ignore venv {} \;
