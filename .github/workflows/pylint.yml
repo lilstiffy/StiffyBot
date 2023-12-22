@@ -32,6 +32,6 @@ jobs:
         
     - name: Analysing the code with pylint
       run: |
-       find . -name '*.py' -exec pylint {} \;
+        python -m pylint --fail-under=1 `find -regextype egrep -regex '(.*.py)$'`
         - if: failure()
           run: echo "Failure"
