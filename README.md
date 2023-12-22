@@ -19,9 +19,11 @@
     - Copy the token and add it to a file named `.env` in the project root:
 
     ```env
-    DISCORD_TOKEN=your-bot-token
-    OPEN_AI_TOKEN=your-open-ai-token
+    DISCORD_TOKEN=your-bot-token (required)
+    OPEN_AI_TOKEN=your-open-ai-token (optional)
+    URBAN_DICTIONARY_TOKEN=your-urban-dictionary-token (optional)
     ```
+   An Urban dictionary api-key can be retrieved at: https://rapidapi.com/community/api/urban-dictionary
 
 4. **Run the bot:**
 
@@ -37,4 +39,4 @@ If you'd like to contribute to this project, feel free to do so!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Unlicense License - see the [LICENSE](LICENSE) file for details.
