@@ -28,6 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install discord
         pip install python-dotenv
+        pip install pylint
         
     - name: Analysing the code with pylint
       run: |
