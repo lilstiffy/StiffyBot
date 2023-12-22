@@ -1,0 +1,4 @@
+[MASTER]
+ignore=migrations
+# Ignore all .py files under the venv subdirectory.
+ignore-paths=^venv/.*$
